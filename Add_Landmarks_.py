@@ -66,8 +66,9 @@ def DrawLandmarks(imp, pos, img_type):
 	bit_depth = imp.getBitDepth()
 	(width,height,n_channels,n_slices,n_frames) = imp.getDimensions()
 
-	radius = 1 #width / 300
-
+	radius = 1 # microns
+#	range_XY = radius / pixel_width
+#	range_Z  = radius / pixel_depth
 	on_val = 2**bit_depth - 1
 	imp_landmarks = IJ.createImage("Landmarks",width,height,n_slices,bit_depth)
 	imp_landmarks.setCalibration(cal)
@@ -81,11 +82,11 @@ def DrawLandmarks(imp, pos, img_type):
 
 		print(pX,pY,pZ)
 		ip = stack.getProcessor(pZ+1)
-		for x in range(pX-radius,pX+radius):
-			for y in range(pY-radius,pY+radius):
+		for x in range(pX-radius,pX+radius+1):
+			for y in range(pY-radius,pY+radius+1):
 #				print("Putting %d at (%d,%d,%d)"%(on_val,x,y,pZ))
-				if (((x-pX)**2 + (y-pY)**2) <= radius**2):
-					ip.putPixel(x,y,on_val)
+#				if (((x-pX)**2 + (y-pY)**2) <= radius**2):
+				ip.putPixel(x,y,on_val)
 	imp_landmarks.setTitle(img_type)
 	imp_landmarks.updateAndDraw()
 	imp_landmarks.show()
